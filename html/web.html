@@ -407,7 +407,6 @@
             } catch (error) {
                 loading.style.display = 'none';
                 addMessage('Sorry, something went wrong. Please try again.', 'ai-message');
-                addMessage(error.message)
             }
         }
 
@@ -418,6 +417,10 @@
             chatMessages.appendChild(messageDiv);
             messageDiv.scrollIntoView({ behavior: 'smooth' });
         }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            addMessage('Hello! I am Web Chat Ai Project Development By TheGreatTeams', 'ai-message');
+        });
     </script>
 </body>
 </html>
