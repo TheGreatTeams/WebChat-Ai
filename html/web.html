@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheGreatTeams | Project 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(45deg, #FF3366, #FF6B6B);
+            --secondary-gradient: linear-gradient(135deg, #43CBFF, #9708CC);
+            --message-gradient: linear-gradient(to right, #E0EAFC, #CFDEF3);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background: #0F2027;
+            background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 4rem);
+        }
+
+        .sidebar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand-text {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--glass-bg);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.3);
+        }
+
+        .chat-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--glass-bg);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            background: #4CAF50;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            70% { transform: scale(2); opacity: 0; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .message {
+            max-width: 80%;
+            margin-bottom: 1.5rem;
+            position: relative;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            margin-left: auto;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1.2rem 1.5rem;
+            border-radius: 20px 20px 5px 20px;
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.2);
+        }
+
+        .ai-message {
+            background: var(--message-gradient);
+            color: #1a1a1a;
+            padding: 1.2rem 1.5rem;
+            border-radius: 20px 20px 20px 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-input-container {
+            padding: 1.5rem 2rem;
+            background: var(--glass-bg);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .chat-input-wrapper {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 1rem;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .send-button {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.3);
+        }
+
+        .loading-container {
+            display: none;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading-dots {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            width: fit-content;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            animation: loadingPulse 1.5s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes loadingPulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @media (max-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="brand-text">TheGreat | ChatAi</div>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-comment"></i>
+                        Chat
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-image"></i>
+                        Image Generation
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-code"></i>
+                        Code Assistant
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        Documents
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="chat-container">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <div class="status-indicator"></div>
+                    Chat With Gemini
+                </div>
+                <div class="toolbar">
+                    <button class="btn text-white">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="loading-container" id="loading">
+                    <div class="loading-dots">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <input type="text" class="chat-input" id="userInput" placeholder="Type your message here...">
+                    <button class="send-button" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const loading = document.getElementById('loading');
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user-message');
+            userInput.value = '';
+            loading.style.display = 'block';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch('api/v1/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: message })
+                });
+
+                const has = await response.json();
+                loading.style.display = 'none';
+             
+                setTimeout(() => {
+                    addMessage(has.result, 'ai-message');
+                }, 500);
+            } catch (error) {
+                loading.style.display = 'none';
+                addMessage('Sorry, something went wrong. Please try again.', 'ai-message');
+                addMessage(error.message)
+            }
+        }
+
+        function addMessage(text, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            messageDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
