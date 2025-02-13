@@ -72,8 +72,8 @@ The application can be configured through:
 
 ### Core Files
 - `web.html` - Main structure
-- `styles` section - Visual styling
-- `script` section - Application logic
+- `aiIndex.js` section - Api Requests
+- `express.js` section - Backend
 
 ### Customization Options
 - Bootstrap class modifications
