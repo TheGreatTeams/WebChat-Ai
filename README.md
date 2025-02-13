@@ -71,7 +71,7 @@ const API_ENDPOINT = 'api/v1/ask';
 The application can be configured through:
 
 ### Core Files
-- `index.html` - Main structure
+- `web.html` - Main structure
 - `styles` section - Visual styling
 - `script` section - Application logic
 
